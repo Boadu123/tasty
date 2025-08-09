@@ -16,6 +16,7 @@ public class UserResgisterMapper {
                 .middleName(userRegisterRequestDTO.middleName())
                 .lastName(userRegisterRequestDTO.lastName())
                 .email(userRegisterRequestDTO.email())
+                .role(userRegisterRequestDTO.role())
                 .password(userRegisterRequestDTO.password())
                 .build();
     }
@@ -26,6 +27,7 @@ public class UserResgisterMapper {
         }
 
         return new UserRegisterResponseDTO(
+                user.getId(),
                 user.getFirstName(),
                 user.getMiddleName(),
                 user.getLastName(),

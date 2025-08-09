@@ -1,10 +1,7 @@
 package com.example.auth_service.dto.request;
 
 import com.example.auth_service.enums.Role;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record UserRegisterRequestDTO(
 
@@ -28,6 +25,6 @@ public record UserRegisterRequestDTO(
         )
         String password,
 
-        @NotBlank(message = "message must not be blank")
+        @NotNull(message = "message must not be blank")
         Role role
 ) {}

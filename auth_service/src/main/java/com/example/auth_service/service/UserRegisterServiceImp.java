@@ -1,19 +1,20 @@
 package com.example.auth_service.service;
 
 import com.example.auth_service.dto.request.UserRegisterRequestDTO;
-import com.example.auth_service.dto.response.UserRegisterResponseDTO;
 import com.example.auth_service.exception.DuplicateResourceException;
 import com.example.auth_service.mapper.UserResgisterMapper;
 import com.example.auth_service.models.User;
 import com.example.auth_service.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserRegisterServiceImp implements UserServiceRegister{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserRegisterServiceImp(UserRepository userRepository, UserRegisterRequestDTO userRegisterRequestDTO, PasswordEncoder passwordEncoder) {
+    public UserRegisterServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
