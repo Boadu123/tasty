@@ -4,7 +4,7 @@ import com.example.auth_service.dto.request.UserRegisterRequestDTO;
 import com.example.auth_service.dto.response.UserRegisterResponseDTO;
 import com.example.auth_service.mapper.UserResgisterMapper;
 import com.example.auth_service.models.User;
-import com.example.auth_service.service.UserRegisterServiceImp;
+import com.example.auth_service.service.imp.UserRegisterServiceImp;
 import com.example.auth_service.utils.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

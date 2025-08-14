@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex) {
+        ex.printStackTrace();
         ApiError error = new ApiError();
         error.setStatus("error");
         error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
