@@ -1,42 +1,45 @@
 package com.example.auth_service.controller;
 
-import com.example.auth_service.dto.request.UserRegisterRequestDTO;
-import com.example.auth_service.dto.response.UserRegisterResponseDTO;
-import com.example.auth_service.mapper.UserResgisterMapper;
+import com.example.auth_service.dto.response.UserResponseDTO;
 import com.example.auth_service.models.User;
-import com.example.auth_service.service.imp.UserRegisterServiceImp;
+import com.example.auth_service.service.imp.UserServiceImp;
 import com.example.auth_service.utils.ApiResponse;
-import jakarta.validation.Valid;
+import com.example.auth_service.utils.ApiSuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1")
 public class UserController {
 
-    private final UserRegisterServiceImp userRegisterServiceImp;
+    private final UserServiceImp userServiceImp;
 
-    public UserController(UserRegisterServiceImp userRegisterServiceImp) {
-        this.userRegisterServiceImp = userRegisterServiceImp;
+    public UserController(UserServiceImp userServiceImp) {
+        this.userServiceImp = userServiceImp;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserRegisterResponseDTO>> registerUser(@Valid @RequestBody UserRegisterRequestDTO userRegisterRequestDTO) {
-        User user = userRegisterServiceImp.registerUser(userRegisterRequestDTO);
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse<UserResponseDTO>> getProfile() {
+        User user = userServiceImp.getUserProfile();
 
-        UserRegisterResponseDTO responseDTO = UserResgisterMapper.toUserRegisterResponseDTO(user);
+        UserResponseDTO profileDTO = new UserResponseDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getMiddleName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
 
-        ApiResponse<UserRegisterResponseDTO> apiResponse = new ApiResponse<>();
-        apiResponse.setStatus("success");
-        apiResponse.setCode(HttpStatus.CREATED.value());
-        apiResponse.setMessage("User registered successfully");
-        apiResponse.setData(responseDTO);
+        ApiResponse<UserResponseDTO> response = ApiSuccessResponse.buildSuccessResponse(
+                HttpStatus.OK,
+                "User profile retrieved successfully",
+                profileDTO
+        );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+        return ResponseEntity.ok(response);
     }
-
 }

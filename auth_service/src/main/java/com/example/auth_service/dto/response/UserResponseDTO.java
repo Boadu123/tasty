@@ -5,7 +5,7 @@ import com.example.auth_service.enums.Role;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record UserRegisterResponseDTO(
+public record UserResponseDTO(
         UUID id,
         String firstName,
         String middleName,
