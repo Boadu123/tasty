@@ -1,10 +1,13 @@
 package com.example.auth_service.controller;
 
+import com.example.auth_service.dto.request.UserUpdateRequestDTO;
 import com.example.auth_service.dto.response.UserResponseDTO;
+import com.example.auth_service.dto.response.UserUpdateResponseDTO;
 import com.example.auth_service.models.User;
 import com.example.auth_service.service.imp.UserServiceImp;
 import com.example.auth_service.utils.ApiResponse;
 import com.example.auth_service.utils.ApiSuccessResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +41,21 @@ public class UserController {
                 HttpStatus.OK,
                 "User profile retrieved successfully",
                 profileDTO
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/profile")
+    public ResponseEntity<ApiResponse<UserUpdateResponseDTO>> updateProfile(
+            @Valid @RequestBody UserUpdateRequestDTO requestDTO) {
+
+        UserUpdateResponseDTO updatedUser = userServiceImp.updateUserProfile(requestDTO);
+
+        ApiResponse<UserUpdateResponseDTO> response = ApiSuccessResponse.buildSuccessResponse(
+                HttpStatus.OK,
+                "User profile updated successfully",
+                updatedUser
         );
 
         return ResponseEntity.ok(response);
