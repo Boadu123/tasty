@@ -1,9 +1,12 @@
 package com.example.auth_service.service.imp;
 
 import com.example.auth_service.dto.request.LoginRequestDTO;
+import com.example.auth_service.dto.request.UserRegisterRequestDTO;
 import com.example.auth_service.dto.response.LoginResponseDTO;
+import com.example.auth_service.exception.DuplicateResourceException;
 import com.example.auth_service.exception.UserNameNotFoundException;
 import com.example.auth_service.mapper.LoginMapper;
+import com.example.auth_service.mapper.UserResgisterMapper;
 import com.example.auth_service.models.User;
 import com.example.auth_service.repository.UserRepository;
 import com.example.auth_service.security.JwtService;
@@ -11,6 +14,7 @@ import com.example.auth_service.service.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,11 +23,13 @@ public class AuthServiceImp implements AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthServiceImp(UserRepository userRepository, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthServiceImp(UserRepository userRepository, JwtService jwtService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
@@ -40,4 +46,17 @@ public class AuthServiceImp implements AuthService {
         String token = jwtService.generateToken(user.getEmail(), user.getId());
         return LoginMapper.toLoginResponseDTO(user , token);
     }
+
+    public User registerUser(UserRegisterRequestDTO userRegisterRequestDTO) {
+        if(userRepository.existsByEmail(userRegisterRequestDTO.email())){
+            throw new DuplicateResourceException("Email already Exist");
+        }
+
+        User userRegister = UserResgisterMapper.toUserRegisterModel(userRegisterRequestDTO);
+        userRegister.setPassword(passwordEncoder.encode(userRegisterRequestDTO.password()));
+        userRepository.save(userRegister);
+
+        return userRegister;
+    }
+
 }

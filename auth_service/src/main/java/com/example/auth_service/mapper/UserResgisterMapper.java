@@ -1,7 +1,7 @@
 package com.example.auth_service.mapper;
 
 import com.example.auth_service.dto.request.UserRegisterRequestDTO;
-import com.example.auth_service.dto.response.UserRegisterResponseDTO;
+import com.example.auth_service.dto.response.UserResponseDTO;
 import com.example.auth_service.models.User;
 
 public class UserResgisterMapper {
@@ -21,12 +21,12 @@ public class UserResgisterMapper {
                 .build();
     }
 
-    public static UserRegisterResponseDTO toUserRegisterResponseDTO(User user) {
+    public static UserResponseDTO toUserRegisterResponseDTO(User user) {
         if (user == null) {
             return null;
         }
 
-        return new UserRegisterResponseDTO(
+        return new UserResponseDTO(
                 user.getId(),
                 user.getFirstName(),
                 user.getMiddleName(),
