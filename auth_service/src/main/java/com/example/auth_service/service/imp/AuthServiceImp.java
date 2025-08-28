@@ -43,7 +43,7 @@ public class AuthServiceImp implements AuthService {
         User user = userRepository.findByEmail(loginRequestDTO.email())
                 .orElseThrow(() -> new UserNameNotFoundException("User Not found"));
 
-        String token = jwtService.generateToken(user.getEmail(), user.getId());
+        String token = jwtService.generateToken(user.getEmail(), user.getId(), user.getRole());
         return LoginMapper.toLoginResponseDTO(user , token);
     }
 
