@@ -28,6 +28,7 @@
 		<module>auth_service</module>
 		<module>config_server</module>
 		<module>api_gateway</module>
+		<module>dish_service</module>
 	</modules>
 
 	<dependencies>
