@@ -7,6 +7,8 @@ import com.example.dish.mapper.MenuMapper;
 import com.example.dish.models.Menu;
 import com.example.dish.repository.MenuRepository;
 import com.example.dish.service.MenuService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,7 +34,7 @@ public class MenuServiceImpl implements MenuService {
 
         boolean exist = menuRepository.existsByNameIgnoreCase(menuRequestDTO.name());
         if(exist){
-            throw new MenuExistException("Menu with name " + menuRequestDTO.name() + "already exist");
+            throw new MenuExistException("Menu with name " + menuRequestDTO.name() + " already exist");
         }
 
         Menu menu = MenuMapper.toMenuEntity(menuRequestDTO);
@@ -41,5 +43,10 @@ public class MenuServiceImpl implements MenuService {
 
         Menu savedMenu = menuRepository.save(menu);
         return MenuMapper.toMenuResponseDTO(savedMenu);
+    }
+
+    public Page<MenuResponseDTO> getAllMenus(Pageable pageable) {
+        Page<Menu> menuPage = menuRepository.findAll(pageable);
+        return menuPage.map(MenuMapper::toMenuResponseDTO);
     }
 }

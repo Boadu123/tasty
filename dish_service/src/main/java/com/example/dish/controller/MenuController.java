@@ -6,12 +6,11 @@ import com.example.dish.service.MenuService;
 import com.example.dish.utils.ApiResponse;
 import com.example.dish.utils.ApiSuccessResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/menu")
@@ -35,5 +34,18 @@ public class MenuController {
             );
 
             return new  ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+        }
+
+        @GetMapping
+        public ResponseEntity<ApiResponse<Page<MenuResponseDTO>>> getAllMenus(Pageable pageable){
+            Page<MenuResponseDTO> menus = menuService.getAllMenus(pageable);
+
+            ApiResponse<Page<MenuResponseDTO>> apiResponse = ApiSuccessResponse.buildSuccessResponse(
+                    HttpStatus.OK,
+                    "Menus Retrieved Successfully",
+                    menus
+            );
+
+            return new  ResponseEntity<>(apiResponse, HttpStatus.OK);
         }
 }

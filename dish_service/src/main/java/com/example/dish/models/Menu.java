@@ -21,7 +21,7 @@ public class Menu {
         this.isActive = isActive;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.dishes = dishes != null ? dishes : new HashSet<>();
+        this.dish = dishes != null ? dish : new HashSet<>();
     }
 
     @Id
@@ -45,7 +45,7 @@ public class Menu {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "menu" )
-    private Set<Dish> dishes = new HashSet<>();
+    private Set<Dish> dish;
 
     public UUID getId() {
         return id;
@@ -100,11 +100,11 @@ public class Menu {
     }
 
     public Set<Dish> getDishes() {
-        return dishes;
+        return dish;
     }
 
     public void setDishes(Set<Dish> dishes) {
-        this.dishes = dishes;
+        this.dish = dishes;
     }
 
     public static class MenuBuilder {
