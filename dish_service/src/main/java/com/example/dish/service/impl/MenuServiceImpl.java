@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -48,5 +49,10 @@ public class MenuServiceImpl implements MenuService {
     public Page<MenuResponseDTO> getAllMenus(Pageable pageable) {
         Page<Menu> menuPage = menuRepository.findAll(pageable);
         return menuPage.map(MenuMapper::toMenuResponseDTO);
+    }
+
+    public MenuResponseDTO getMenuById(UUID id){
+        Menu menu = menuRepository.findById(id).orElseThrow(() -> new MenuExistException("Menu with id " + id + " does not exist"));
+        return MenuMapper.toMenuResponseDTO(menu);
     }
 }
