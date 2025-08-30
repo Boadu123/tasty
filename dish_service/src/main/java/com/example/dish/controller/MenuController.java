@@ -1,6 +1,7 @@
 package com.example.dish.controller;
 
 import com.example.dish.dto.request.MenuRequestDTO;
+import com.example.dish.dto.request.MenuUpdateDTO;
 import com.example.dish.dto.response.MenuResponseDTO;
 import com.example.dish.models.Menu;
 import com.example.dish.service.MenuService;
@@ -69,9 +70,9 @@ public class MenuController {
         }
 
         @PatchMapping("/{id}")
-        public ResponseEntity<ApiResponse<MenuResponseDTO>> updateMenu(@PathVariable UUID id,@RequestBody MenuRequestDTO menuRequestDTO) {
+        public ResponseEntity<ApiResponse<MenuResponseDTO>> updateMenu(@PathVariable UUID id,@RequestBody MenuUpdateDTO menuUpdateDTO) {
 
-            MenuResponseDTO updatedMenu = menuServiceImpl.updateMenu(id, menuRequestDTO);
+            MenuResponseDTO updatedMenu = menuServiceImpl.updateMenu(id, menuUpdateDTO);
 
             ApiResponse<MenuResponseDTO> apiResponse = ApiSuccessResponse.buildSuccessResponse(
                     HttpStatus.OK,

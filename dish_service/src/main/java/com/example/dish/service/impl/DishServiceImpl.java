@@ -1,6 +1,7 @@
 package com.example.dish.service.impl;
 
 import com.example.dish.dto.request.DishRequestDTO;
+import com.example.dish.dto.request.DishUpdateDTO;
 import com.example.dish.dto.response.DishResponseDTO;
 import com.example.dish.exception.MenuExistException;
 import com.example.dish.mapper.DishMapper;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -56,6 +56,41 @@ public class DishServiceImpl implements DishService {
         return DishMapper.toDishResponseDTO(dish);
     }
 
+    public DishResponseDTO updateDish(UUID id, DishUpdateDTO dishUpdateDTO) {
+        Dish dish = dishRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dish with id " + id + " does not exist"));
 
+        if (dishUpdateDTO.name() != null) {
+            dish.setName(dishUpdateDTO.name());
+        }
+
+        if (dishUpdateDTO.description() != null) {
+            dish.setDescription(dishUpdateDTO.description());
+        }
+
+        if (dishUpdateDTO.price() != null) {
+            dish.setPrice(dishUpdateDTO.price());
+        }
+
+        if (dishUpdateDTO.image_url() != null) {
+            dish.setImage_url(dishUpdateDTO.image_url());
+        }
+
+        if (dishUpdateDTO.isAvailable() != null) {   // now nullable Boolean
+            dish.setAvailable(dishUpdateDTO.isAvailable());
+        }
+
+        if (dishUpdateDTO.menuId() != null) {
+            Menu menu = menuRepository.findById(dishUpdateDTO.menuId())
+                    .orElseThrow(() -> new RuntimeException("Menu with id " + dishUpdateDTO.menuId() + " does not exist"));
+            dish.setMenu(menu);
+        }
+
+        dish.setUpdatedAt(LocalDateTime.now());
+
+        Dish updatedDish = dishRepository.save(dish);
+
+        return DishMapper.toDishResponseDTO(updatedDish);
+    }
 
 }

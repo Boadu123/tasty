@@ -1,6 +1,7 @@
 package com.example.dish.service;
 
 import com.example.dish.dto.request.MenuRequestDTO;
+import com.example.dish.dto.request.MenuUpdateDTO;
 import com.example.dish.dto.response.MenuResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ public interface MenuService {
 
     public MenuResponseDTO getMenuById(UUID id);
 
-    public MenuResponseDTO updateMenu(UUID id, MenuRequestDTO menuRequestDTO);
+    public MenuResponseDTO updateMenu(UUID id, MenuUpdateDTO menuUpdateDTO);
 
     public void deleteMenu(UUID id);
 }

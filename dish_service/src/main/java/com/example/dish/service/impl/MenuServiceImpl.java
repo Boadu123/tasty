@@ -1,6 +1,7 @@
 package com.example.dish.service.impl;
 
 import com.example.dish.dto.request.MenuRequestDTO;
+import com.example.dish.dto.request.MenuUpdateDTO;
 import com.example.dish.dto.response.MenuResponseDTO;
 import com.example.dish.exception.MenuExistException;
 import com.example.dish.mapper.MenuMapper;
@@ -56,18 +57,21 @@ public class MenuServiceImpl implements MenuService {
         return MenuMapper.toMenuResponseDTO(menu);
     }
 
-    public MenuResponseDTO updateMenu(UUID id, MenuRequestDTO menuRequestDTO){
-        Menu menu = menuRepository.findById(id).orElseThrow(() -> new MenuExistException("Menu with id " + id + " does not exist"));
+    public MenuResponseDTO updateMenu(UUID id, MenuUpdateDTO menuUpdateDTO) {
+        Menu menu = menuRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu with id " + id + " does not exist"));
 
-        if(menuRequestDTO.name() != null){
-            menu.setName(menuRequestDTO.name());
+        if (menuUpdateDTO.name() != null) {
+            menu.setName(menuUpdateDTO.name());
         }
 
-        if(menuRequestDTO.description() != null){
-            menu.setDescription(menuRequestDTO.description());
+        if (menuUpdateDTO.description() != null) {
+            menu.setDescription(menuUpdateDTO.description());
         }
 
-        menu.setActive(menuRequestDTO.isActive());
+        if (menuUpdateDTO.isActive() != null) {   // now nullable Boolean
+            menu.setActive(menuUpdateDTO.isActive());
+        }
 
         menu.setUpdatedAt(LocalDateTime.now());
 
@@ -75,6 +79,7 @@ public class MenuServiceImpl implements MenuService {
 
         return MenuMapper.toMenuResponseDTO(updatedMenu);
     }
+
 
     public void deleteMenu(UUID id){
 

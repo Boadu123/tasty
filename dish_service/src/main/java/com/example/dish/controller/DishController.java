@@ -1,6 +1,7 @@
 package com.example.dish.controller;
 
 import com.example.dish.dto.request.DishRequestDTO;
+import com.example.dish.dto.request.DishUpdateDTO;
 import com.example.dish.dto.response.DishResponseDTO;
 import com.example.dish.service.impl.DishServiceImpl;
 import com.example.dish.utils.ApiResponse;
@@ -66,6 +67,22 @@ public class DishController {
                 HttpStatus.OK,
                 "Dish Retrieved Successfully",
                 dishResponseDTO
+        );
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<DishResponseDTO>> updateDish(
+            @PathVariable UUID id,
+            @RequestBody @Valid DishUpdateDTO dishUpdateDTO) {
+
+        DishResponseDTO updatedDish = dishServiceImpl.updateDish(id, dishUpdateDTO);
+
+        ApiResponse<DishResponseDTO> apiResponse = ApiSuccessResponse.buildSuccessResponse(
+                HttpStatus.OK,
+                "Dish Updated Successfully",
+                updatedDish
         );
 
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
