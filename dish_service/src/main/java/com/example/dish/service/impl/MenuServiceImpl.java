@@ -17,7 +17,7 @@ import java.util.UUID;
 @Service
 public class MenuServiceImpl implements MenuService {
 
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
 
     public MenuServiceImpl(MenuRepository menuRepository) {
         this.menuRepository = menuRepository;

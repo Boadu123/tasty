@@ -21,12 +21,12 @@ import java.util.UUID;
 public class MenuController {
 
         private final MenuService menuService;
-    private final MenuServiceImpl menuServiceImpl;
+        private final MenuServiceImpl menuServiceImpl;
 
-    public MenuController(MenuService menuService, MenuServiceImpl menuServiceImpl) {
-            this.menuService = menuService;
-        this.menuServiceImpl = menuServiceImpl;
-    }
+        public MenuController(MenuService menuService, MenuServiceImpl menuServiceImpl) {
+                this.menuService = menuService;
+            this.menuServiceImpl = menuServiceImpl;
+        }
 
         @PostMapping
         public ResponseEntity<ApiResponse<MenuResponseDTO>> createMenu(@RequestBody @Valid MenuRequestDTO menuRequestDTO){
