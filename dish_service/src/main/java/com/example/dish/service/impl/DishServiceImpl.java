@@ -9,9 +9,12 @@ import com.example.dish.models.Menu;
 import com.example.dish.repository.DishRepository;
 import com.example.dish.repository.MenuRepository;
 import com.example.dish.service.DishService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class DishServiceImpl implements DishService {
@@ -40,6 +43,13 @@ public class DishServiceImpl implements DishService {
 
         return DishMapper.toDishResponseDTO(savedDish);
     }
+
+    public Page<DishResponseDTO> getAllDishes(Pageable pageable) {
+        Page<Dish> dishes = dishRepository.findAll(pageable);
+        return  dishes.map(DishMapper::toDishResponseDTO);
+    }
+
+
 
 
 }
