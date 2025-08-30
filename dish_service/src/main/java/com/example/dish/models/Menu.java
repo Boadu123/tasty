@@ -44,7 +44,7 @@ public class Menu {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "menu" )
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL )
     private Set<Dish> dish;
 
     public UUID getId() {

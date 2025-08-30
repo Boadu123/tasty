@@ -63,7 +63,6 @@ public class GlobalException {
     // Catch-all for unexpected errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex) {
-        ex.printStackTrace();
         ApiError apiError = new ApiError();
         apiError.setStatus("error");
         apiError.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());

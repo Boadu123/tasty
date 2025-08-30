@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class MenuServiceImpl implements MenuService {
@@ -48,5 +49,37 @@ public class MenuServiceImpl implements MenuService {
     public Page<MenuResponseDTO> getAllMenus(Pageable pageable) {
         Page<Menu> menuPage = menuRepository.findAll(pageable);
         return menuPage.map(MenuMapper::toMenuResponseDTO);
+    }
+
+    public MenuResponseDTO getMenuById(UUID id){
+        Menu menu = menuRepository.findById(id).orElseThrow(() -> new MenuExistException("Menu with id " + id + " does not exist"));
+        return MenuMapper.toMenuResponseDTO(menu);
+    }
+
+    public MenuResponseDTO updateMenu(UUID id, MenuRequestDTO menuRequestDTO){
+        Menu menu = menuRepository.findById(id).orElseThrow(() -> new MenuExistException("Menu with id " + id + " does not exist"));
+
+        if(menuRequestDTO.name() != null){
+            menu.setName(menuRequestDTO.name());
+        }
+
+        if(menuRequestDTO.description() != null){
+            menu.setDescription(menuRequestDTO.description());
+        }
+
+        menu.setActive(menuRequestDTO.isActive());
+
+        menu.setUpdatedAt(LocalDateTime.now());
+
+        Menu updatedMenu = menuRepository.save(menu);
+
+        return MenuMapper.toMenuResponseDTO(updatedMenu);
+    }
+
+    public void deleteMenu(UUID id){
+
+        Menu menu = menuRepository.findById(id).orElseThrow(() -> new MenuExistException("Menu with id " + id + " does not exist"));
+
+        menuRepository.delete(menu);
     }
 }
