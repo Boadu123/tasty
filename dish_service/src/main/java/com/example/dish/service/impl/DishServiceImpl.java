@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DishServiceImpl implements DishService {
@@ -49,6 +50,11 @@ public class DishServiceImpl implements DishService {
         return  dishes.map(DishMapper::toDishResponseDTO);
     }
 
+    public DishResponseDTO getDishById(UUID id) {
+        Dish dish = dishRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dish with id " + id + " does not exist"));
+        return DishMapper.toDishResponseDTO(dish);
+    }
 
 
 

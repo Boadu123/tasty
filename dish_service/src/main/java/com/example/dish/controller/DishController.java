@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(("/api/v1/dish"))
@@ -57,5 +58,17 @@ public class DishController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<DishResponseDTO>> getDishById(@PathVariable UUID id) {
+        DishResponseDTO dishResponseDTO = dishServiceImpl.getDishById(id);
+
+        ApiResponse<DishResponseDTO> apiResponse = ApiSuccessResponse.buildSuccessResponse(
+                HttpStatus.OK,
+                "Dish Retrieved Successfully",
+                dishResponseDTO
+        );
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 
 }
