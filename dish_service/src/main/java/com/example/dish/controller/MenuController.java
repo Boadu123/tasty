@@ -2,6 +2,7 @@ package com.example.dish.controller;
 
 import com.example.dish.dto.request.MenuRequestDTO;
 import com.example.dish.dto.response.MenuResponseDTO;
+import com.example.dish.models.Menu;
 import com.example.dish.service.MenuService;
 import com.example.dish.service.impl.MenuServiceImpl;
 import com.example.dish.utils.ApiResponse;
@@ -42,7 +43,7 @@ public class MenuController {
         }
 
         @GetMapping
-        public ResponseEntity<ApiResponse<Page<MenuResponseDTO>>> getAllMenus(Pageable pageable){
+        public ResponseEntity<ApiResponse<Page<MenuResponseDTO>>> getAllMenus(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id,asc") String sort, Pageable pageable){
             Page<MenuResponseDTO> menus = menuServiceImpl.getAllMenus(pageable);
 
             ApiResponse<Page<MenuResponseDTO>> apiResponse = ApiSuccessResponse.buildSuccessResponse(
@@ -62,6 +63,34 @@ public class MenuController {
                     HttpStatus.OK,
                     "Menu Retrieved Successfully",
                     menu
+            );
+
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        }
+
+        @PatchMapping("/{id}")
+        public ResponseEntity<ApiResponse<MenuResponseDTO>> updateMenu(@PathVariable UUID id,@RequestBody MenuRequestDTO menuRequestDTO) {
+
+            MenuResponseDTO updatedMenu = menuServiceImpl.updateMenu(id, menuRequestDTO);
+
+            ApiResponse<MenuResponseDTO> apiResponse = ApiSuccessResponse.buildSuccessResponse(
+                    HttpStatus.OK,
+                    "Menu updated successfully",
+                    updatedMenu
+            );
+
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        }
+
+        @DeleteMapping("/{id}")
+        public ResponseEntity<ApiResponse<Void>> deleteMenu(@PathVariable UUID id) {
+
+            menuServiceImpl.deleteMenu(id);
+
+            ApiResponse<Void> apiResponse = ApiSuccessResponse.buildSuccessResponse(
+                    HttpStatus.OK,
+                    "Menu deleted successfully",
+                    null
             );
 
             return new ResponseEntity<>(apiResponse, HttpStatus.OK);
