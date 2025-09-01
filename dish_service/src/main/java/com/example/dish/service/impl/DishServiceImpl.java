@@ -3,6 +3,7 @@ package com.example.dish.service.impl;
 import com.example.dish.dto.request.DishRequestDTO;
 import com.example.dish.dto.request.DishUpdateDTO;
 import com.example.dish.dto.response.DishResponseDTO;
+import com.example.dish.exception.DishExistException;
 import com.example.dish.exception.MenuExistException;
 import com.example.dish.mapper.DishMapper;
 import com.example.dish.models.Dish;
@@ -52,7 +53,7 @@ public class DishServiceImpl implements DishService {
 
     public DishResponseDTO getDishById(UUID id) {
         Dish dish = dishRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dish with id " + id + " does not exist"));
+                .orElseThrow(() -> new DishExistException("Dish with id " + id + " does not exist"));
         return DishMapper.toDishResponseDTO(dish);
     }
 
@@ -82,7 +83,7 @@ public class DishServiceImpl implements DishService {
 
         if (dishUpdateDTO.menuId() != null) {
             Menu menu = menuRepository.findById(dishUpdateDTO.menuId())
-                    .orElseThrow(() -> new RuntimeException("Menu with id " + dishUpdateDTO.menuId() + " does not exist"));
+                    .orElseThrow(() -> new MenuExistException("Menu with id " + dishUpdateDTO.menuId() + " does not exist"));
             dish.setMenu(menu);
         }
 
@@ -91,6 +92,13 @@ public class DishServiceImpl implements DishService {
         Dish updatedDish = dishRepository.save(dish);
 
         return DishMapper.toDishResponseDTO(updatedDish);
+    }
+
+    public void deleteDish(UUID id) {
+        Dish dish = dishRepository.findById(id)
+                .orElseThrow(() -> new DishExistException("Dish with id " + id + " does not exist"));
+
+        dishRepository.delete(dish);
     }
 
 }

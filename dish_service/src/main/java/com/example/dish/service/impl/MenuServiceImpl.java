@@ -59,7 +59,7 @@ public class MenuServiceImpl implements MenuService {
 
     public MenuResponseDTO updateMenu(UUID id, MenuUpdateDTO menuUpdateDTO) {
         Menu menu = menuRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Menu with id " + id + " does not exist"));
+                .orElseThrow(() -> new MenuExistException("Menu with id " + id + " does not exist"));
 
         if (menuUpdateDTO.name() != null) {
             menu.setName(menuUpdateDTO.name());

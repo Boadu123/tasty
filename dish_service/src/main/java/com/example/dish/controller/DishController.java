@@ -88,4 +88,17 @@ public class DishController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteDish(@PathVariable UUID id) {
+        dishServiceImpl.deleteDish(id);
+
+        ApiResponse<Void> apiResponse = ApiSuccessResponse.buildSuccessResponse(
+                HttpStatus.NO_CONTENT,
+                "Dish Deleted Successfully",
+                null
+        );
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.NO_CONTENT);
+    }
 }

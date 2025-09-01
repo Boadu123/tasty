@@ -19,4 +19,6 @@ public interface DishRepository extends JpaRepository<Dish,Long> {
 
     @EntityGraph(attributePaths = "menu")
     Optional<Dish> findById(UUID id);
+
+
 }
