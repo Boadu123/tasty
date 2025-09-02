@@ -12,5 +12,6 @@ public record MenuRequestDTO(
         @NotNull(message = "Active status is required")
         boolean isActive
 ) {
+
 }
 
