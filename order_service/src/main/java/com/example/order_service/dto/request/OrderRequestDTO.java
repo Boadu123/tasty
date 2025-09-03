@@ -1,8 +1,7 @@
 package com.example.order_service.dto.request;
 
-import com.example.order_service.enums.OrderStatus;
+import com.example.order_service.dto.response.OrderItemResponseDTO;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 import java.util.UUID;

@@ -28,7 +28,9 @@ public class OrderItemMapper {
                 orderItem.getId(),
                 orderItem.getDishId(),
                 orderItem.getQuantity(),
-                orderItem.getOrder() != null ? orderItem.getOrder().getId() : null
-        );
+                orderItem.getOrder() != null ? orderItem.getOrder().getId() : null,
+                orderItem.getDishName(),
+                orderItem.getPriceAtOrder()
+                );
     }
 }
