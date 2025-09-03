@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/menu")
+@RequestMapping("/api/v1/dish/menu")
 public class MenuController {
 
         private final MenuService menuService;

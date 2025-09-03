@@ -12,7 +12,7 @@ import java.util.UUID;
 
 
 @Repository
-public interface MenuRepository extends JpaRepository<Menu,Long> {
+public interface MenuRepository extends JpaRepository<Menu,UUID> {
 
     boolean existsByNameIgnoreCase(String name);
 
