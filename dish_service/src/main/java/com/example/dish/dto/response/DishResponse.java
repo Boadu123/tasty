@@ -1,4 +1,4 @@
-package com.example.order_service.dto.response;
+package com.example.dish.dto.response;
 
 import java.math.BigDecimal;
 import java.util.UUID;

@@ -38,7 +38,7 @@ public class OrderServiceImpl implements OrderService{
             try {
                 //Using FeignClient to fetch from the dish_service
                 DishResponse response = dishClient.getDishById(itemRequest.productId());
-                dish = response.data();
+                dish = response;
                 cacheService.updateCache(dish); // refresh cache
             } catch (Exception e) {
                 // fallback if service is down
@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService{
             orderItem.setOrder(order);
             orderItem.setDishId(itemRequest.productId());
             orderItem.setDishName(dish.name());
-            orderItem.setPriceAtOrder(BigDecimal.valueOf((dish.price())));
+            orderItem.setPriceAtOrder(dish.price());
             orderItem.setQuantity(itemRequest.quantity());
             return orderItem;
         }).toList();

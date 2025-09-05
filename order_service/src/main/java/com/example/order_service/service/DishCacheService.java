@@ -10,13 +10,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class DishCacheService {
 
-    private final Map<UUID, DishResponse> cache = new ConcurrentHashMap<>();
-
-    public void updateCache(DishResponse dishResponse) {
-        cache.put(dishResponse.id(), dishResponse);
-    }
+    private final ConcurrentHashMap<UUID, DishResponse> cache = new ConcurrentHashMap<>();
 
     public DishResponse getFromCache(UUID id) {
         return cache.get(id);
+    }
+
+    public void updateCache(DishResponse dish) {
+        cache.put(dish.id(), dish);
+        System.out.println("Cache updated for dish: " + dish.id());
+    }
+
+    public void removeFromCache(UUID dishId) {
+        cache.remove(dishId);
+        System.out.println("Cache removed for dish: " + dishId);
     }
 }
