@@ -2,7 +2,9 @@ package com.example.dish.service.impl;
 
 import com.example.dish.dto.request.DishRequestDTO;
 import com.example.dish.dto.request.DishUpdateDTO;
+import com.example.dish.dto.response.DishResponse;
 import com.example.dish.dto.response.DishResponseDTO;
+import com.example.dish.event.DishEvent;
 import com.example.dish.exception.DishExistException;
 import com.example.dish.exception.MenuExistException;
 import com.example.dish.mapper.DishMapper;
@@ -10,6 +12,7 @@ import com.example.dish.models.Dish;
 import com.example.dish.models.Menu;
 import com.example.dish.repository.DishRepository;
 import com.example.dish.repository.MenuRepository;
+import com.example.dish.service.DishEventProducer;
 import com.example.dish.service.DishService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +26,13 @@ public class DishServiceImpl implements DishService {
 
     private final DishRepository dishRepository;
     private final MenuRepository menuRepository;
+    private final DishEventProducer dishEventProducer;
 
-    public DishServiceImpl(DishRepository dishRepository,  MenuRepository menuRepository) {
+
+    public DishServiceImpl(DishRepository dishRepository,  MenuRepository menuRepository, DishEventProducer dishEventProducer) {
         this.dishRepository = dishRepository;
         this.menuRepository = menuRepository;
+        this.dishEventProducer = dishEventProducer;
     }
 
     public DishResponseDTO createDish(DishRequestDTO dishRequestDTO){
@@ -43,7 +49,12 @@ public class DishServiceImpl implements DishService {
 
         Dish savedDish = dishRepository.save(dish);
 
-        return DishMapper.toDishResponseDTO(savedDish);
+        DishResponseDTO dishResponseDTO = DishMapper.toDishResponseDTO(savedDish);
+        DishResponse dishResponse = DishMapper.toDishResponse(savedDish);
+        DishEvent event = new DishEvent(DishEvent.EventType.CREATED, dishResponse);
+        dishEventProducer.sendDishEvent(event);
+
+        return dishResponseDTO;
     }
 
     public Page<DishResponseDTO> getAllDishes(Pageable pageable) {
@@ -91,7 +102,12 @@ public class DishServiceImpl implements DishService {
 
         Dish updatedDish = dishRepository.save(dish);
 
-        return DishMapper.toDishResponseDTO(updatedDish);
+        DishResponseDTO dishResponseDTO = DishMapper.toDishResponseDTO(updatedDish);
+        DishResponse dishResponse = DishMapper.toDishResponse(updatedDish);
+        DishEvent event = new DishEvent(DishEvent.EventType.UPDATED, dishResponse);
+        dishEventProducer.sendDishEvent(event);
+
+        return dishResponseDTO;
     }
 
     public void deleteDish(UUID id) {
@@ -99,6 +115,11 @@ public class DishServiceImpl implements DishService {
                 .orElseThrow(() -> new DishExistException("Dish with id " + id + " does not exist"));
 
         dishRepository.delete(dish);
+
+        DishResponseDTO response = DishMapper.toDishResponseDTO(dish);
+        DishResponse dishResponse = DishMapper.toDishResponse(dish);
+        DishEvent event = new DishEvent(DishEvent.EventType.DELETED, dishResponse);
+        dishEventProducer.sendDishEvent(event);
     }
 
 }

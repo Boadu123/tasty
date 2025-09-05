@@ -12,7 +12,7 @@ import java.util.UUID;
 
 
 @Repository
-public interface DishRepository extends JpaRepository<Dish,Long> {
+public interface DishRepository extends JpaRepository<Dish,UUID> {
 
     @EntityGraph(attributePaths = "menu")
     Page<Dish> findAll(Pageable pageable);
