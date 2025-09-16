@@ -6,6 +6,7 @@ public record DishEvent(EventType eventType, DishResponse data ) {
     public enum EventType {
         CREATED,
         UPDATED,
-        DELETED
+        DELETED,
+        SNAPSHOT
     }
 }

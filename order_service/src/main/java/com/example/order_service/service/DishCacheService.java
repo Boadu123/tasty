@@ -1,28 +1,30 @@
 package com.example.order_service.service;
 
 import com.example.order_service.dto.response.DishResponse;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+
 
 @Service
 public class DishCacheService {
 
-    private final ConcurrentHashMap<UUID, DishResponse> cache = new ConcurrentHashMap<>();
-
-    public DishResponse getFromCache(UUID id) {
-        return cache.get(id);
+    @Cacheable(value = "dish", key = "#productId")
+    public DishResponse getFromCache(UUID productId) {
+        return null; // Spring will return null if not in cache
     }
 
-    public void updateCache(DishResponse dish) {
-        cache.put(dish.id(), dish);
-        System.out.println("Cache updated for dish: " + dish.id());
+    // Store/Update dish in cache
+    @CachePut(value = "dish", key = "#dish.id()")
+    public DishResponse updateCache(DishResponse dish) {
+        System.out.println("Caching dish: " + dish);
+        return dish;
     }
 
-    public void removeFromCache(UUID dishId) {
-        cache.remove(dishId);
-        System.out.println("Cache removed for dish: " + dishId);
-    }
+    // Evict dish from cache
+    @CacheEvict(value = "dish", key = "#productId")
+    public void removeFromCache(UUID productId) {}
 }

@@ -26,4 +26,10 @@ public class DishEventConsumer {
                 break;
         }
     }
+
+    @KafkaListener(topics = "dish-snapshots", groupId = "order-service-group")
+    public void handleSnapshotEvent(DishEvent event) {
+        System.out.println("📥 Received dish snapshot: " + event);
+        dishCacheService.updateCache(event.data());
+    }
 }

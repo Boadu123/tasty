@@ -1,6 +1,5 @@
 package com.example.order_service.service.impl;
 
-import com.example.order_service.client.DishClient;
 import com.example.order_service.dto.request.OrderRequestDTO;
 import com.example.order_service.dto.response.DishResponse;
 import com.example.order_service.dto.response.OrderResponseDTO;
@@ -17,36 +16,27 @@ import java.util.HashSet;
 import java.util.List;
 
 @Service
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final DishClient dishClient;
     private final DishCacheService cacheService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, DishClient dishClient, DishCacheService cacheService) {
+    public OrderServiceImpl(OrderRepository orderRepository, DishCacheService cacheService) {
         this.orderRepository = orderRepository;
-        this.dishClient = dishClient;
         this.cacheService = cacheService;
     }
 
+    @Override
     public OrderResponseDTO placeOrder(OrderRequestDTO request) {
         Order order = new Order();
         order.setUserId(request.userId());
 
         List<OrderItem> items = request.items().stream().map(itemRequest -> {
-            DishResponse dish;
-            try {
-                //Using FeignClient to fetch from the dish_service
-                DishResponse response = dishClient.getDishById(itemRequest.productId());
-                dish = response;
-                cacheService.updateCache(dish); // refresh cache
-            } catch (Exception e) {
-                // fallback if service is down
-                dish = cacheService.getFromCache(itemRequest.productId());
-            }
+            // 🔑 Now we depend only on the cache populated by Kafka events
+            DishResponse dish = cacheService.getFromCache(itemRequest.productId());
 
-            if (dish == null) {
-                throw new RuntimeException("Dish not available and not in cache");
+            if (dish == null || !dish.isAvailable()) {
+                throw new RuntimeException("Dish not available: " + itemRequest.productId());
             }
 
             // snapshot product details
@@ -66,11 +56,8 @@ public class OrderServiceImpl implements OrderService{
         order.setOrderItems(new HashSet<>(items));
         order.setTotalPrice(totalPrice);
 
-        order.setOrderItems(new HashSet<>(items));
         Order savedOrder = orderRepository.save(order);
 
         return OrderMapper.toOrderResponseDTO(savedOrder);
     }
 }
-
-
